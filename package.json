@@ -28,7 +28,7 @@
     "build:site": "node scripts/build-site.mjs"
   },
   "dependencies": {
-    "@mlc-ai/web-llm": "0.2.79"
+    "@mlc-ai/web-llm": "0.2.84"
   },
   "devDependencies": {
     "@types/chrome": "0.0.287",
