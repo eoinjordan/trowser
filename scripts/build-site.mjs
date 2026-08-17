@@ -5,16 +5,20 @@
  * byte-identical output from a single source of truth.
  */
 
-import { cp, mkdir, rm, writeFile, readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { cp, mkdir, readdir, rm, writeFile, readFile } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
 const out = resolve(root, '_site');
 
 const pkg = JSON.parse(await readFile(resolve(root, 'package.json'), 'utf8'));
 
-await rm(out, { recursive: true, force: true });
+// Empty the directory rather than removing it: on Windows a preview pane or
+// editor holding the folder open makes rmdir fail with EBUSY.
 await mkdir(out, { recursive: true });
+for (const entry of await readdir(out)) {
+  await rm(join(out, entry), { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+}
 
 await cp(resolve(root, 'site'), out, { recursive: true });
 await cp(resolve(root, 'brand'), resolve(out, 'brand'), { recursive: true });
