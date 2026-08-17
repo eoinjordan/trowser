@@ -48,6 +48,9 @@ jobs:
       - name: Package extension
         run: npm run package
 
+      - name: Build landing page
+        run: npm run build:site
+
       - name: Upload unpacked extension
         if: matrix.node == '22'
         uses: actions/upload-artifact@v5

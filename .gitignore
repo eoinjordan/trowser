@@ -8,3 +8,5 @@ artifacts/
 Thumbs.db
 .env
 .env.*
+_site/
+.vercel/

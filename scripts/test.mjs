@@ -38,7 +38,8 @@ await build({
   sourcemap: 'inline',
   outExtension: { '.js': '.mjs' },
   // node:test and node:assert must stay external so the runner can see them.
-  external: ['node:*'],
+  // jsdom is a real node dependency and must not be inlined into the bundle.
+  external: ['node:*', 'jsdom'],
   logLevel: 'warning'
 });
 

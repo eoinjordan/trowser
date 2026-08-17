@@ -47,7 +47,9 @@ const archive = createZip(entries, new Date('1980-01-01T00:00:00Z'));
 
 await mkdir(outDir, { recursive: true });
 
-const zipName = `trowser-${pkg.version}.zip`;
+// The debug build carries source maps and must not overwrite the store build,
+// which is roughly half the size.
+const zipName = includeMaps ? `trowser-${pkg.version}-debug.zip` : `trowser-${pkg.version}.zip`;
 const zipPath = resolve(outDir, zipName);
 const digest = createHash('sha256').update(archive).digest('hex');
 

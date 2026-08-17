@@ -35,12 +35,7 @@ jobs:
       - run: npm ci
 
       - name: Assemble the site
-        run: |
-          mkdir -p _site
-          cp -r site/* _site/
-          cp -r brand _site/brand
-          # Jekyll would otherwise ignore files beginning with an underscore.
-          touch _site/.nojekyll
+        run: node scripts/build-site.mjs
 
       - uses: actions/configure-pages@v5
 

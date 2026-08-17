@@ -1,44 +1,130 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#10110F" />
-  <title>Trowser — Stuff the agent into the browser.</title>
-  <meta name="description" content="A browser-native local agent runtime for Chrome." />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header class="nav wrap">
-    <a class="logo" href="#"><span class="logo-box">T</span><span>TROWSER</span></a>
-    <div class="status">LOCAL / INSPECTABLE / YOUR TAB</div>
-  </header>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10110F" />
+    <title>Trowser — Stuff the agent into the browser.</title>
+    <meta
+      name="description"
+      content="A browser-native local agent runtime for Chrome. Runs an AI agent on the current tab using an on-device or self-hosted model. No cloud agent service, no API key required."
+    />
 
-  <main>
-    <section class="hero wrap">
-      <div class="kicker">TROWSER STUFFING / 001</div>
-      <h1>Stop sending your browser to the agent.</h1>
-      <div class="stuff">Stuff the agent in.</div>
-      <p class="lede">A local browser agent that reads the DOM, reasons on-device and performs browser actions from inside Chrome.</p>
-      <div class="proof">
-        <span>0 API KEYS</span><span>0 CLOUD TOKENS</span><span>1 STUFFED BROWSER</span>
-      </div>
-    </section>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Trowser — Stuff the agent into the browser." />
+    <meta
+      property="og:description"
+      content="A browser-native local agent runtime for Chrome. Chrome built-in AI, WebLLM, Ollama or any OpenAI-compatible endpoint."
+    />
+    <meta property="og:image" content="brand/social-card.png" />
+    <meta name="twitter:card" content="summary_large_image" />
 
-    <section class="diagram wrap">
-      <div class="node">DOM<br><small>OBSERVE</small></div><div class="arrow">→</div>
-      <div class="node hot">LOCAL LLM<br><small>DECIDE</small></div><div class="arrow">→</div>
-      <div class="node">TOOLS<br><small>ACT</small></div><div class="arrow">→</div>
-      <div class="node">DOM<br><small>VERIFY</small></div>
-    </section>
+    <link rel="icon" href="brand/logo-mark.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="nav wrap">
+      <a class="logo" href="#"><span class="logo-box">T</span><span>TROWSER</span></a>
+      <div class="status">LOCAL / INSPECTABLE / YOUR TAB</div>
+    </header>
 
-    <section class="grid wrap">
-      <article><div class="n">01</div><h2>Browser-native</h2><p>The page state, model session and tool loop live in the browser rather than in a remote browser farm.</p></article>
-      <article><div class="n">02</div><h2>Local-first</h2><p>Use Chrome built-in AI where available, with WebLLM over WebGPU as a fallback.</p></article>
-      <article><div class="n">03</div><h2>Permissioned</h2><p>Safe actions can flow. Consequential actions stop for explicit approval. Password and file fields remain blocked.</p></article>
-    </section>
-  </main>
+    <main>
+      <section class="hero wrap">
+        <div class="kicker">TROWSER STUFFING / 001</div>
+        <h1>Stop sending your browser to the agent.</h1>
+        <div class="stuff">Stuff the agent in.</div>
+        <p class="lede">
+          A local browser agent that reads the DOM, reasons on your own hardware and performs browser
+          actions from inside Chrome. The model session, the policy engine and the tools all live in
+          the browser.
+        </p>
+        <div class="proof">
+          <span>0 API KEYS</span><span>0 CLOUD TOKENS</span><span>1 STUFFED BROWSER</span>
+        </div>
+        <p class="cta">
+          <a class="button" href="https://github.com/eoinjordan/trowser/releases">Download</a>
+          <a class="button ghost" href="https://github.com/eoinjordan/trowser">Source</a>
+        </p>
+      </section>
 
-  <footer class="wrap"><span>TROWSER.EXE</span><span>THE BROWSER IS THE AGENT RUNTIME.</span></footer>
-</body>
+      <section class="diagram wrap">
+        <div class="node">DOM<br /><small>OBSERVE</small></div>
+        <div class="arrow">&rarr;</div>
+        <div class="node hot">LOCAL LLM<br /><small>DECIDE</small></div>
+        <div class="arrow">&rarr;</div>
+        <div class="node">POLICY<br /><small>ASSESS</small></div>
+        <div class="arrow">&rarr;</div>
+        <div class="node">TOOLS<br /><small>ACT</small></div>
+      </section>
+
+      <section class="grid wrap">
+        <article>
+          <div class="n">01</div>
+          <h2>Browser-native</h2>
+          <p>
+            Page state, model session and tool loop live in your browser rather than in a remote
+            browser farm. Page content does not leave the device.
+          </p>
+        </article>
+        <article>
+          <div class="n">02</div>
+          <h2>Any local backend</h2>
+          <p>
+            Chrome built-in AI, WebLLM on WebGPU, Ollama, or any OpenAI-compatible server. Auto picks
+            whichever the machine already has.
+          </p>
+        </article>
+        <article>
+          <div class="n">03</div>
+          <h2>Permissioned</h2>
+          <p>
+            Safe actions flow. Consequential actions stop for approval. Destructive ones always ask.
+            Passwords, card numbers and API keys are hard-blocked.
+          </p>
+        </article>
+      </section>
+
+      <section class="backends wrap">
+        <h2 class="section-title">FOUR BACKENDS, ONE AGENT</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Backend</th>
+              <th>Install</th>
+              <th>Runs where</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Chrome built-in AI</td>
+              <td>nothing</td>
+              <td>On-device, managed by Chrome</td>
+            </tr>
+            <tr>
+              <td>WebLLM</td>
+              <td>nothing</td>
+              <td>In the tab, on WebGPU</td>
+            </tr>
+            <tr>
+              <td>Ollama</td>
+              <td>Ollama daemon</td>
+              <td>localhost</td>
+            </tr>
+            <tr>
+              <td>OpenAI-compatible</td>
+              <td>any server</td>
+              <td>LM Studio, llama.cpp, vLLM, Jan</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="note">
+          Models pull straight from Hugging Face, including one-click GGUF pulls into Ollama.
+        </p>
+      </section>
+    </main>
+
+    <footer class="wrap">
+      <span>TROWSER.EXE</span><span>THE BROWSER IS THE AGENT RUNTIME.</span>
+    </footer>
+  </body>
 </html>

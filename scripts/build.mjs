@@ -13,8 +13,8 @@
  */
 
 import { build, context } from 'esbuild';
-import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { resolve, join } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
 const outdir = resolve(root, 'dist');
@@ -31,6 +31,21 @@ const shared = {
   logLevel: 'info',
   define: { __TROWSER_VERSION__: JSON.stringify(pkg.version) }
 };
+
+/**
+ * Empties dist/ without removing the directory itself.
+ *
+ * On Windows, `rm -rf dist` fails with EBUSY whenever a shell is cd'd into it,
+ * or an editor or antivirus has a handle open. Clearing the contents instead
+ * avoids that entirely, and is what the build actually needs.
+ */
+async function emptyDist() {
+  await mkdir(outdir, { recursive: true });
+
+  for (const entry of await readdir(outdir)) {
+    await rm(join(outdir, entry), { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+  }
+}
 
 /** Copies static assets and syncs the manifest version with package.json. */
 async function copyStatic() {
@@ -74,14 +89,14 @@ const contentOptions = {
 };
 
 if (watch) {
-  await rm(outdir, { recursive: true, force: true });
+  await emptyDist();
   await copyStatic();
 
   const contexts = await Promise.all([context(pageOptions), context(contentOptions)]);
   await Promise.all(contexts.map((ctx) => ctx.watch()));
   console.log('Trowser is watching for changes. Reload the extension in chrome://extensions after each build.');
 } else {
-  await rm(outdir, { recursive: true, force: true });
+  await emptyDist();
   await copyStatic();
   await Promise.all([build(pageOptions), build(contentOptions)]);
   console.log('Built Trowser v' + pkg.version + ' into dist/');
