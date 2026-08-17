@@ -31,11 +31,11 @@
     "@mlc-ai/web-llm": "0.2.79"
   },
   "devDependencies": {
-    "@types/chrome": "0.0.287",
+    "@types/chrome": "0.2.6",
     "@types/jsdom": "^30.0.0",
-    "@types/node": "^22.20.1",
-    "esbuild": "0.24.2",
-    "jsdom": "^25.0.1",
-    "typescript": "5.7.3"
+    "@types/node": "^26.2.0",
+    "esbuild": "0.28.2",
+    "jsdom": "^30.0.1",
+    "typescript": "7.0.2"
   }
 }
