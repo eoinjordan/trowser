@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "Trowser",
+  "version": "0.2.0",
+  "description": "Browser-native local agent runtime. Runs an AI agent on the current tab using an on-device or self-hosted model.",
+  "minimum_chrome_version": "116",
+  "permissions": ["activeTab", "scripting", "storage", "sidePanel", "identity"],
+  "optional_permissions": ["tabs"],
+  "host_permissions": [],
+  "optional_host_permissions": [
+    "http://localhost/*",
+    "http://127.0.0.1/*",
+    "https://huggingface.co/*",
+    "https://*.huggingface.co/*",
+    "https://api.github.com/*",
+    "https://*.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Open Trowser"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "options_page": "options.html",
+  "commands": {
+    "open-trowser": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+U",
+        "mac": "Command+Shift+U"
+      },
+      "description": "Open the Trowser side panel"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src 'self' data: blob: http://localhost:* http://127.0.0.1:* https://huggingface.co https://*.huggingface.co https://cdn-lfs.huggingface.co https://cdn-lfs-us-1.huggingface.co https://raw.githubusercontent.com https://*.githubusercontent.com https://api.github.com https://github.com https://accounts.google.com https://openidconnect.googleapis.com https://www.googleapis.com https://router.huggingface.co"
+  }
+}

@@ -1,0 +1,14 @@
+<svg width="1200" height="320" viewBox="0 0 1200 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="320" rx="28" fill="#10110F"/>
+  <g transform="translate(72 72)">
+    <rect x="0" y="0" width="204" height="176" rx="18" stroke="#D7FF3F" stroke-width="12"/>
+    <path d="M20 42H184" stroke="#D7FF3F" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="30" cy="21" r="6" fill="#D7FF3F"/>
+    <circle cx="52" cy="21" r="6" fill="#D7FF3F" opacity=".66"/>
+    <circle cx="74" cy="21" r="6" fill="#D7FF3F" opacity=".33"/>
+    <path d="M52 78H152M102 78V148" stroke="#F4F1E8" stroke-width="18" stroke-linecap="square"/>
+    <path d="M172 72L184 84L172 96M172 114L184 126L172 138" stroke="#D7FF3F" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="330" y="168" fill="#F4F1E8" font-family="Arial, Helvetica, sans-serif" font-size="112" font-weight="900" letter-spacing="7">TROWSER</text>
+  <text x="338" y="219" fill="#D7FF3F" font-family="monospace" font-size="26" font-weight="700" letter-spacing="5">STUFF THE AGENT INTO THE BROWSER.</text>
+</svg>

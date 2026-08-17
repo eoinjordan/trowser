@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trowser settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="masthead">
+        <div class="mark" aria-hidden="true">T</div>
+        <div>
+          <h1>Trowser</h1>
+          <p class="strap">BROWSER-NATIVE LOCAL AGENT RUNTIME</p>
+        </div>
+      </header>
+
+      <p id="savedFlag" class="saved" role="status" aria-live="polite" hidden>Saved</p>
+
+      <!-- ------------------------------------------------------ backends -->
+      <section class="card">
+        <h2>Inference backend</h2>
+        <p class="hint">
+          Where the model runs. <strong>Auto</strong> tries each in order and uses the first that works.
+        </p>
+
+        <div class="field">
+          <label for="backend">Backend</label>
+          <select id="backend">
+            <option value="auto">Auto - first available</option>
+            <option value="chrome-ai">Chrome built-in AI (Gemini Nano)</option>
+            <option value="webllm">WebLLM - in-browser on WebGPU</option>
+            <option value="ollama">Ollama - local daemon</option>
+            <option value="openai-compatible">OpenAI-compatible endpoint</option>
+          </select>
+        </div>
+
+        <div id="backendStatus" class="status-grid"></div>
+        <button id="testAll" class="secondary">Test all backends</button>
+      </section>
+
+      <!-- -------------------------------------------------------- webllm -->
+      <section class="card" data-backend="webllm">
+        <h2>WebLLM (in-browser, WebGPU)</h2>
+        <p class="hint">
+          Runs entirely inside this browser. Weights download once from Hugging Face and are cached locally.
+          Nothing leaves the device after that.
+        </p>
+
+        <div class="field">
+          <label for="webllmModel">Model</label>
+          <select id="webllmModel"></select>
+        </div>
+        <p id="webllmNote" class="hint mono"></p>
+      </section>
+
+      <!-- -------------------------------------------------------- ollama -->
+      <section class="card" data-backend="ollama">
+        <h2>Ollama</h2>
+        <p class="hint">
+          Ollama must allow this extension as an origin. Start it with
+          <code>OLLAMA_ORIGINS="chrome-extension://*"</code> or the browser request will be refused.
+        </p>
+
+        <div class="field">
+          <label for="ollamaBaseUrl">Base URL</label>
+          <input id="ollamaBaseUrl" type="text" spellcheck="false" placeholder="http://127.0.0.1:11434" />
+        </div>
+
+        <div class="field">
+          <label for="ollamaModel">Model</label>
+          <div class="row">
+            <input id="ollamaModel" type="text" spellcheck="false" placeholder="qwen2.5:7b-instruct" list="ollamaModels" />
+            <datalist id="ollamaModels"></datalist>
+            <button id="refreshOllama" class="secondary">Refresh</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="pullRef">Pull a model</label>
+          <div class="row">
+            <input id="pullRef" type="text" spellcheck="false" placeholder="qwen2.5:7b-instruct or hf.co/org/repo:Q4_K_M" />
+            <button id="pullModel" class="secondary">Pull</button>
+          </div>
+          <progress id="pullProgress" max="1" value="0" hidden></progress>
+          <p id="pullStatus" class="hint mono"></p>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------ openai endpoint -->
+      <section class="card" data-backend="openai-compatible">
+        <h2>OpenAI-compatible endpoint</h2>
+        <p class="hint">
+          Works with LM Studio, llama.cpp, vLLM, Jan, LocalAI and the Hugging Face router.
+        </p>
+
+        <div class="field">
+          <label for="openaiBaseUrl">Base URL</label>
+          <input id="openaiBaseUrl" type="text" spellcheck="false" placeholder="http://127.0.0.1:1234/v1" />
+          <div class="chips">
+            <button class="chip" data-url="http://127.0.0.1:1234/v1">LM Studio</button>
+            <button class="chip" data-url="http://127.0.0.1:8080/v1">llama.cpp</button>
+            <button class="chip" data-url="http://127.0.0.1:8000/v1">vLLM</button>
+            <button class="chip" data-url="https://router.huggingface.co/v1">HF router</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="openaiModel">Model</label>
+          <div class="row">
+            <input id="openaiModel" type="text" spellcheck="false" list="openaiModels" placeholder="leave blank to use the first available" />
+            <datalist id="openaiModels"></datalist>
+            <button id="refreshOpenai" class="secondary">Refresh</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="openaiApiKey">API key (optional)</label>
+          <input id="openaiApiKey" type="password" spellcheck="false" autocomplete="off" placeholder="only needed for remote endpoints" />
+          <p class="hint">Stored locally in this browser profile and sent only to the base URL above.</p>
+        </div>
+      </section>
+
+      <!-- --------------------------------------------------- huggingface -->
+      <section class="card">
+        <h2>Hugging Face</h2>
+        <p class="hint">
+          Supplies model weights for WebLLM and GGUF pulls for Ollama. A token is only needed for gated repos
+          or higher rate limits.
+        </p>
+
+        <div class="field">
+          <label for="hfToken">Access token (optional)</label>
+          <div class="row">
+            <input id="hfToken" type="password" spellcheck="false" autocomplete="off" placeholder="hf_..." />
+            <button id="verifyHf" class="secondary">Verify</button>
+          </div>
+          <p id="hfStatus" class="hint mono"></p>
+        </div>
+
+        <div class="field">
+          <label for="hfQuery">Search models</label>
+          <div class="row">
+            <input id="hfQuery" type="text" spellcheck="false" placeholder="llama, qwen, phi..." />
+            <select id="hfKind">
+              <option value="gguf">GGUF (Ollama)</option>
+              <option value="mlc">MLC (WebLLM)</option>
+            </select>
+            <button id="hfSearch" class="secondary">Search</button>
+          </div>
+        </div>
+        <div id="hfResults" class="results"></div>
+      </section>
+
+      <!-- ------------------------------------------------------- accounts -->
+      <section class="card">
+        <h2>Accounts</h2>
+        <p class="hint">
+          Optional. Sign in to back up your settings and saved skills. Trowser has no server, so tokens stay
+          in this browser profile and go only to the provider.
+        </p>
+
+        <div class="account-row">
+          <div>
+            <strong>GitHub</strong>
+            <p id="githubStatus" class="hint mono">Not signed in</p>
+          </div>
+          <div class="row">
+            <button id="githubSignIn" class="secondary">Sign in</button>
+            <button id="githubSignOut" class="secondary">Sign out</button>
+          </div>
+        </div>
+
+        <details class="sub">
+          <summary>GitHub sign-in options</summary>
+          <div class="field">
+            <label for="githubToken">Personal access token (works with no setup)</label>
+            <div class="row">
+              <input id="githubToken" type="password" spellcheck="false" autocomplete="off" placeholder="ghp_..." />
+              <button id="githubTokenSignIn" class="secondary">Use token</button>
+            </div>
+            <p class="hint">
+              Create one at github.com/settings/tokens with the <code>gist</code> scope.
+            </p>
+          </div>
+          <div class="field">
+            <label for="githubClientId">OAuth app client ID (for device sign-in)</label>
+            <input id="githubClientId" type="text" spellcheck="false" placeholder="Iv1..." />
+            <p class="hint">Requires an OAuth app with device flow enabled.</p>
+          </div>
+        </details>
+
+        <div class="account-row">
+          <div>
+            <strong>Google</strong>
+            <p id="googleStatus" class="hint mono">Not signed in</p>
+          </div>
+          <div class="row">
+            <button id="googleSignIn" class="secondary">Sign in</button>
+            <button id="googleSignOut" class="secondary">Sign out</button>
+          </div>
+        </div>
+
+        <details class="sub">
+          <summary>Google sign-in setup</summary>
+          <div class="field">
+            <label for="googleClientId">OAuth client ID</label>
+            <input id="googleClientId" type="text" spellcheck="false" placeholder="....apps.googleusercontent.com" />
+            <p class="hint">
+              Add this redirect URI to your OAuth client:
+              <code id="redirectUri">loading...</code>
+            </p>
+          </div>
+        </details>
+      </section>
+
+      <!-- -------------------------------------------------------- agent -->
+      <section class="card">
+        <h2>Agent behaviour</h2>
+
+        <div class="field">
+          <label for="maxSteps">Step limit per run: <span id="maxStepsValue"></span></label>
+          <input id="maxSteps" type="range" min="1" max="60" />
+        </div>
+
+        <label class="check">
+          <input id="approveEverything" type="checkbox" />
+          <span>Approve every action, not just risky ones</span>
+        </label>
+
+        <label class="check">
+          <input id="allowCrossOrigin" type="checkbox" />
+          <span>Allow the agent to navigate to other sites</span>
+        </label>
+
+        <div class="field">
+          <label for="trustedOrigins">Trusted origins</label>
+          <textarea id="trustedOrigins" rows="3" spellcheck="false" placeholder="https://example.com"></textarea>
+          <p class="hint">
+            One origin per line. Routine and consequential actions run without prompting on these sites.
+            Destructive actions always ask, everywhere.
+          </p>
+        </div>
+
+        <details class="sub">
+          <summary>Observation budgets</summary>
+          <div class="field">
+            <label for="textBudget">Page text sent per step: <span id="textBudgetValue"></span> characters</label>
+            <input id="textBudget" type="range" min="500" max="40000" step="500" />
+          </div>
+          <div class="field">
+            <label for="elementBudget">Interactive elements per step: <span id="elementBudgetValue"></span></label>
+            <input id="elementBudget" type="range" min="10" max="300" step="10" />
+          </div>
+          <p class="hint">Smaller budgets are faster and fit small models. Larger budgets see more of the page.</p>
+        </details>
+      </section>
+
+      <!-- --------------------------------------------------- permissions -->
+      <section class="card">
+        <h2>Permissions</h2>
+        <p class="hint">
+          Trowser requests host access only for the backends you actually use. Nothing is granted by default.
+        </p>
+        <div id="permissionList" class="status-grid"></div>
+      </section>
+
+      <footer>
+        <span id="versionLabel"></span>
+        <a href="https://github.com/eoinjordan/trowser" target="_blank" rel="noreferrer noopener">Documentation</a>
+      </footer>
+    </main>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

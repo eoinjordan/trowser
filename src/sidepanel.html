@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trowser</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="brandbar">
+        <div class="mark" aria-hidden="true">T</div>
+        <div class="brandtext">
+          <div class="wordmark">TROWSER</div>
+          <div class="strap">LOCAL AGENT RUNTIME</div>
+        </div>
+        <button id="openOptions" class="icon-button" title="Open settings" aria-label="Open settings">&#9881;</button>
+      </header>
+
+      <section class="statusbar" aria-live="polite">
+        <span id="backendDot" class="dot" data-state="unknown" aria-hidden="true"></span>
+        <span id="backendLabel" class="backend-label">Checking backends&hellip;</span>
+        <span id="localityBadge" class="badge">LOCAL</span>
+      </section>
+
+      <section class="control-card">
+        <label for="goal">What should this tab do?</label>
+        <textarea
+          id="goal"
+          rows="3"
+          placeholder="Find the pricing table and tell me which plan includes SSO."
+          aria-describedby="goalHint"
+        ></textarea>
+        <p id="goalHint" class="micro">Ctrl+Enter to run. The agent only touches the active tab.</p>
+
+        <div class="button-row">
+          <button id="run" class="primary">RUN LOCALLY</button>
+          <button id="stop" class="secondary" disabled>STOP</button>
+        </div>
+      </section>
+
+      <section id="interaction" class="interaction" hidden></section>
+
+      <section class="trace-card">
+        <div class="trace-head">
+          <span>AGENT TRACE</span>
+          <button id="clear" class="text-button">clear</button>
+        </div>
+        <div id="trace" class="trace" role="log" aria-live="polite">
+          <div class="trace-empty">Ready to stuff.</div>
+        </div>
+      </section>
+
+      <footer>
+        <span id="version">v0.2.0</span>
+        <span>0 API KEYS</span>
+        <span>0 CLOUD TOKENS</span>
+      </footer>
+    </main>
+    <script type="module" src="sidepanel.js"></script>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release, e.g. v0.2.0'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Verify before releasing
+        run: npm run verify
+
+      - name: Confirm the tag matches package.json
+        run: |
+          TAG="${{ github.event.inputs.tag || github.ref_name }}"
+          PKG="v$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$PKG" ]; then
+            echo "Tag $TAG does not match package.json version $PKG"
+            exit 1
+          fi
+          echo "Releasing $TAG"
+
+      - name: Package
+        run: npm run package
+
+      - name: Package with source maps
+        run: node scripts/package.mjs --include-sourcemaps
+
+      - name: Collect checksums
+        run: |
+          cd artifacts
+          sha256sum *.zip > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          name: Trowser ${{ github.event.inputs.tag || github.ref_name }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          body: |
+            ## Install
+
+            1. Download and unzip `trowser-*.zip` below.
+            2. Open `chrome://extensions` and enable **Developer mode**.
+            3. Choose **Load unpacked** and select the unzipped folder.
+            4. Open any normal web page and press the Trowser icon.
+
+            Verify the download against `SHA256SUMS.txt` before installing.
+
+            ## Backends
+
+            Trowser runs the model locally. Pick one in options:
+
+            | Backend | Install needed | Notes |
+            |---|---|---|
+            | Chrome built-in AI | none | Chrome 138+, on-device Gemini Nano |
+            | WebLLM | none | Runs in-browser on WebGPU, weights cached from Hugging Face |
+            | Ollama | Ollama daemon | Set `OLLAMA_ORIGINS="chrome-extension://*"` |
+            | OpenAI-compatible | any server | LM Studio, llama.cpp, vLLM, Jan, HF router |
+          files: |
+            artifacts/*.zip
+            artifacts/SHA256SUMS.txt

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+artifacts/
+.tmp/
+*.zip
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+.env
+.env.*
