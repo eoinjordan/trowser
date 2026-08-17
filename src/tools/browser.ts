@@ -125,7 +125,9 @@ export function waitForTabLoad(tabId: number, timeoutMs = 15000): Promise<void> 
       setTimeout(resolve, 250);
     };
 
-    const listener = (updatedTabId: number, info: chrome.tabs.TabChangeInfo) => {
+    // Typed structurally rather than as chrome.tabs.TabChangeInfo: that alias
+    // has been renamed across @types/chrome releases, and only status is used.
+    const listener = (updatedTabId: number, info: { status?: string }) => {
       if (updatedTabId === tabId && info.status === 'complete') finish();
     };
 
