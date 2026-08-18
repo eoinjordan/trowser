@@ -6,6 +6,9 @@
 
 <p align="center"><strong>A browser-native local agent runtime for Chrome.</strong></p>
 
+<img width="1241" height="837" alt="image" src="https://github.com/user-attachments/assets/9b121c96-2b92-4163-a29d-fc62f1d639b9" />
+
+
 <p align="center">
   Run an AI agent on the page you are looking at, with a model that runs on your own hardware.<br />
   No cloud agent service. No API key required. No page content leaving the device.
